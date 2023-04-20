@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="광고">
+        <hr />
+        <div id="일반광고" :class="v.link.type + ' '+v.link.value" v-for="(v, i) in aiplus" :key="v.link.type">
+            <span class="index">{{dealindexaiplus[i]
+          }}</span>
+            <a :href="dealurlaiplus[i]" target="_blank"><img class="card-img-top" :src="v.largeImgUrl"
+                    alt="Card image cap" /></a>
+
+            <div id="광고정보">
+                <div>
+                    <select name="comment" style="font-size:12px;" class="combo-bx" v-model='CmsoptionValue'>
+                        <option value="카테고리오맵핑">카오</option>
+                        <option value="서치태그과등록">내과</option>
+                        <option value="브랜드과등록">브랜드과등록</option>
+                        <option value="딜네임과등록">딜과</option>
+                        <option value="검색어포함">검포</option>
+                        <option value="카테제외">카테제외</option>
+                    </select>
+                    <button style="font-size:10px;" @click='postman(v.link.value,v.dispNm)'>cms</button>
+                </div>
+                <span id="딜번호" @click="Commandid(v.link.value)">{{
+              v.link.value
+            }}</span>
+                <span id="딜타입" @click="aaicate(v.link.value)">{{
+              " " + v.link.type
+            }}</span>
+                <div id="딜이름가격" @click="Commandtext(CmsoptionValue_command(v))"
+                    @dblclick="Commandid(v.link.value+'\t'+v.dispNm),Commandcnn(v.link.value,v.dispNm)"
+                    v-html="highlightData(v.dispNm) + ' : ' + v.salePrice + ' 원'"></div>
+                <button v-if="v.link.type == 'DEAL'" @click="deallist(v)">
+                    💙
+                </button>
+                <button v-else @click="deallist2(v)">🤍</button>
+                <div id="카테고리">
+                    <span @dblclick="Commandtext(v.categoryInfo.lcateCode)"
+                        @click="Commandtext(v.categoryInfo.lcateName),check_cate(v.categoryInfo.lcateCode)">{{ v.categoryInfo.lcateName }}</span>
+                    >
+                    <span @dblclick="Commandtext(v.categoryInfo.mcateCode)"
+                        @click="Commandtext(v.categoryInfo.mcateName),check_cate(v.categoryInfo.mcateCode)">{{ v.categoryInfo.mcateName }}</span>
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

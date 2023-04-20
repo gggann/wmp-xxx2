@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title> 검수수수수2 </title>
+
+  <script src="./O/jquery.min.js"></script>
+  <script src="./O/localforage.min.js"></script>
+  <!-- <script src="./O/colorpicker.js"></script> -->
+  <link type="text/css" rel="styleSheet" href="./O/bootstrap.min.css" />
+<!-- JavaScript Bundle with Popper -->
+<script src="./O/bootstrap.bundle.min.js"></script>
+  <script src="./O/vue.min.js"></script>
+  <link type="text/css" rel="styleSheet" href="./O/1.css" />
+  <script src="./O/axios.min.js"></script>
+  <script src="./winonload.js"></script>
+  <script type="text/javascript">
+  
+  </script>
+
+  <style>
+  </style>
+</head>
+
+<body>
+  <!-- <div class="picker" id="color-picker">请选择颜色</div> -->
+  <div id="topAnchor"></div>
+  <div id="app">
+    <div>
+      <!-- {{checkradio}} -->
+      <div v-for="(vv,ii) in areaid">
+        <div v-for="(v,i) in checkradio">
+          <div>
+            <!-- <test></test> -->
+
+            <!-- <component :is="'cnn'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="cnn"></component> -->
+            <!-- <component :is="'vnn'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="vnn"></component>
+             <component :is="'ann'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="ann"></component> -->
+            <component :is="v" :message="vv" :checkboxmessage="v" :alljson="alljson" :id="v"></component>
+            <!-- <component :is="'ann'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="ann"></component> -->
+
+            <!-- <ann :message="vv" :checkboxmessage="v" :alljson="alljson" id="ann"></ann>
+              <vnn :message="vv" :checkboxmessage="v" :alljson="alljson" id="vnn"></vnn> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="텍스트" class="md-form ahover" style="right:1%;width:10%;position:fixed">
+      <button @click="idlist" class="btn btn-default btn-xs">검</button> 
+      <!-- <button @click="totaldelete" class="btn btn-default btn-xs">删除<span -->
+        <button onclick="copyel()" class="btn btn-default btn-xs">copy<span
+          style="color:red">{{deletecount}}</span></button>
+      <a href="#카테코드" class="btn btn-default btn-xs">톱</a>
+      <textarea id="dealname" class="md-textarea form-control" rows="3" @dblclick="복사ID()"></textarea>
+      <label for="dealname"></label>
+
+
+      <div style="font-size: 11px; right: 3px;" id="checkbox">
+
+        <div class="dropdown">
+          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              메뉴
+          </a>
+          <ul class="dropdown-menu">
+
+        <div>
+          사진
+          <input type="range" step='0.1' min='11' max='27' style="left: 0%;" id="이미지크기">
+          글씨
+          <input type="range" step='0.1' min='12' max='22' style="left: 0%;" id="글씨크기">
+          <!-- <button onclick="change_image_width_크게()">+</button>
+          img
+          <button onclick="change_image_width_작게()">-</button>
+        </div>
+        <div>
+          <button onclick="change_font_width_크게()">+</button>
+          글자
+          <button onclick="change_font_width_작게()">-</button>
+        </div> -->
+        <div class="form-check form-switch">
+          <input id="추천" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="cnn">
+          <label class="form-check-label" for="추천">추천</label>
+        </div>
+        <div class="form-check form-switch">
+          <input id="추천b" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="cnnb">
+          <label class="form-check-label" for="추천b">추천</label>
+        </div>
+        <div class="form-check form-switch">
+          <input id="특가" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="ann">
+          <label class="form-check-label" for="특가">특가</label>
+        </div>
+        <div class="form-check form-switch">
+          <input id="가격" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="vnn">
+          <label class="form-check-label" for="가격">가격</label>
+        </div>
+        <div class="form-check form-switch">
+          <input id="추천로컬" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="cnn_local">
+          <label class="form-check-label" for="추천">추천로컬</label>
+        </div>
+        <div class="form-check form-switch">
+          <input id="JPG" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="JPG">
+          <label class="form-check-label" for="광고">JPG</label>
+        </div>
+      </div>
+
+    </ul>
+  </div>
+</div>
+
+    </div>
+  </div>
+  <button class="btn btn-default btn-xs" id="오엑스">6O</button>
+  <div id="추천areatext" style="font-size: 13px;">
+    <div>
+      <textarea id="dealname1" class="md-textarea form-control" rows="5"></textarea>
+      <button onclick="copyel()" class="btn btn-outline-success btn-xs">복사ID</button>
+    </div>
+    <textarea id="dealname2" class="md-textarea form-control" rows="5"></textarea>
+  </div>
+  <!-- <script src="../dist/main.js"></script> -->
+  <!-- <script src="../dist/bundle.js"></script> -->
+
+  <script src="./bundle.js">
+  </script>
+  <script>
+    // new Colorpicker({
+    //   el: "color-picker",
+    //   color: "#000fff", // 初始色
+    //   change: function (elem, hex) {
+    //     elem.style.backgroundColor = hex;
+    //     console.log(elem, hex) // dom元素-elem;十六进制颜色-hex
+    //   }
+    // })
+  </script>
+  <script type="text/javascript">
+
+   
+      $("#이미지크기").on('input propertychange', () => {
+        let a = document.querySelector("#이미지크기").value + 'em'
+        console.log(a)
+        localStorage.setItem('--img_width', a)
+        document.body.style.setProperty('--img_width', a)
+      });
+      $("#글씨크기").on('input propertychange', () => {
+        let a = document.querySelector("#글씨크기").value + 'px'
+        console.log(a)
+        localStorage.setItem('--font_width', a)
+        document.body.style.setProperty('--font_width', a)
+      });
+
+
+    function change_font_width_크게() {
+      let a = localStorage.getItem('--font_width')
+      a = parseInt(a) + 1 + 'px'
+      console.log(a)
+      localStorage.setItem('--font_width', a)
+      document.body.style.setProperty('--font_width', a)
+    }
+
+    function change_font_width_작게() {
+      let a = localStorage.getItem('--font_width')
+      a = parseInt(a) - 1 + 'px'
+      console.log(a)
+      localStorage.setItem('--font_width', a)
+      document.body.style.setProperty('--font_width', a)
+    }
+    function change_image_width_크게() {
+      let a = localStorage.getItem('--img_width')
+      a = parseInt(a) + 1 + 'em'
+      console.log(a)
+      localStorage.setItem('--img_width', a)
+      document.body.style.setProperty('--img_width', a)
+    }
+
+    function change_image_width_작게() {
+      let a = localStorage.getItem('--img_width')
+      a = parseInt(a) - 1 + 'em'
+      console.log(a)
+      localStorage.setItem('--img_width', a)
+      document.body.style.setProperty('--img_width', a)
+    }
+
+    function Command(v) {
+      let oInput = document.createElement('textarea');
+      oInput.innerHTML = v;
+      document.body.appendChild(oInput);
+      oInput.select();
+      document.execCommand("Copy");
+      oInput.style.display = 'none'
+      document.body.removeChild(oInput);
+    }
+
+    function copyel() {
+      var copyb;var copya
+     if(document.querySelector("#dealname1").value.split('\n').length>1){
+      copya = '"' + document.querySelector("#dealname1").value + '"'
+      copyb = '"' + document.querySelector("#dealname2").value + '"'
+     }else{
+      copya = document.querySelector("#dealname1").value
+      copyb = document.querySelector("#dealname2").value
+     }
+     
+      Command(copya + '\t' + copyb)
+      console.log(copya + '\t' + copyb)
+      document.querySelector("#dealname1").value = document.querySelector("#dealname").value = document.querySelector(
+        "#dealname2").value = ''
+    }
+
+    function Commandid_filter(v) {
+      // console.log(v)
+      let oInput = document.createElement('textarea');
+      oInput.innerHTML = v;
+      document.body.appendChild(oInput);
+      oInput.select();
+      document.execCommand("Copy");
+      oInput.style.display = 'none'
+      document.body.removeChild(oInput);
+
+      if (document.querySelector("#dealname").value == "") {
+        document.querySelector("#dealname").value = v;
+      } else {
+        document.querySelector("#dealname").value = document.querySelector("#dealname").value + "\r\n" + v
+      }
+    }
+    // document.body.onmousewheel = function (evt) {
+    // evt = evt || window.event;
+    // if (evt.deltaY > 0) { //在火狐中 向下滚动是3 谷歌是125
+    //   document.querySelector("#광고").style.display = 'none'
+    // } else { //在火狐中 向上滚动是-3 谷歌是-125
+    //   document.querySelector("#광고").style.display = 'block'
+    // }
+    // }
+  </script>
+  </div>
+  </div>
+</body>
+
+</html>

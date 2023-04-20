@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title> 검수수수수2 </title>
+
+  <script src="./O/jquery.min.js"></script>
+  <script src="./O/localforage.min.js"></script>
+
+  <link type="text/css" rel="styleSheet" href="./O/boostrap.css" />
+  <script src="./O/vue.min.js"></script>
+  <!-- <link type="text/css" rel="styleSheet" href="./O/1.css" /> -->
+  <script src="./O/axios.min.js"></script>
+  <script type="text/javascript">
+    window.onload = function () {
+
+    localStorage.getItem('추천')?document.querySelector("#추천").click():console.log('추천 is false')
+    localStorage.getItem('특가')?document.querySelector("#특가").click():console.log('특가 is false')
+    localStorage.getItem('가격')?document.querySelector("#가격").click():console.log('가격 is false')
+    document.querySelector("#추천").addEventListener('click',function(){
+      document.querySelector("#추천").checked?localStorage.setItem('추천','true'):localStorage.removeItem('추천')
+    })
+    document.querySelector("#특가").addEventListener('click',function(){
+      document.querySelector("#특가").checked?localStorage.setItem('특가','true'):localStorage.removeItem('특가')
+    })
+    document.querySelector("#가격").addEventListener('click',function(){
+      document.querySelector("#가격").checked?localStorage.setItem('가격','true'):localStorage.removeItem('가격')
+    })
+
+      setTimeout(() => {
+        document.querySelector("#텍스트 > a").click() //最后一个商品
+      }, 15000);    
+    }
+    const dbReq = indexedDB.open('wmpinfo', 1);
+    // console.log(dbReq)
+    let db;
+    dbReq.addEventListener('success', function (event) {
+      db = event.target.result;
+    });
+
+    dbReq.addEventListener('error', function (event) {
+      const error = event.target.error;
+      console.log('error', error.name);
+    });
+    dbReq.addEventListener('upgradeneeded', function (event) {
+      db = event.target.result;
+      let oldVersion = event.oldVersion;
+      if (oldVersion < 1) {
+        db.createObjectStore('ids', {
+          keyPath: 'keyword',
+          autoIncrement: true
+        });
+        db.createObjectStore('token', {
+          keyPath: 'keyword',
+          autoIncrement: true
+        });
+        db.createObjectStore('cms', {
+          keyPath: 'keyword',
+          autoIncrement: true
+        });
+      }
+    });
+  </script>
+
+  <style>
+  </style>
+</head>
+
+<body>
+  <div id="topAnchor"></div>
+    <div id="app">
+      <div>{{checkradio}}
+        <div v-for="(vv,ii) in areaid">
+          <div v-for="(v,i) in checkradio">
+            <div>
+              <!-- <test></test> -->
+             
+             <!-- <component :is="'cnn'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="cnn"></component> -->
+             <!-- <component :is="'vnn'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="vnn"></component>
+             <component :is="'ann'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="ann"></component> -->
+             <component :is="v"  :message="vv" :checkboxmessage="v" :alljson="alljson" :id="v"></component>
+             <!-- <component :is="'ann'"  :message="vv" :checkboxmessage="v" :alljson="alljson" id="ann"></component> -->
+         
+              <!-- <ann :message="vv" :checkboxmessage="v" :alljson="alljson" id="ann"></ann>
+              <vnn :message="vv" :checkboxmessage="v" :alljson="alljson" id="vnn"></vnn> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="텍스트" class="md-form" style="right:1%;width:10%;position:fixed">
+        <button @click="idlist" class="btn btn-default btn-xs">검</button>
+        <button @click="totaldelete" class="btn btn-default btn-xs">删除<span
+            style="color:red">{{deletecount}}</span></button>
+        <a href="#카테코드" class="btn btn-default btn-xs">톱</a>
+        <textarea id="dealname" class="md-textarea form-control" rows="5" @dblclick="복사ID()"></textarea>
+
+
+          <label for="dealname">
+          </label>
+          <!-- <div id="checkbox">
+            <div><input id="추천" type="checkbox" v-model="checkradio"
+                value="&period=monthly&price=&review=&searchDest=TAB_RANK&selectTab=rank&sort=weight&testScript=&testTarget=&ueKeywordInfo=Y">추천
+            </div>
+            <div><input id="특가" type="checkbox" v-model="checkradio"
+                value="&perPage=30&period=monthly&price=&review=&searchDest=TAB_SPECIAL&selectTab=special&sort=weight&testScript=&testTarget=&ueKeywordInfo=Y">특가
+            </div>
+            <div id="광고체크">
+              <input id="aicheck" type="checkbox" value="aiplus">
+              <label id='btncheck' for="aicheck">광고</label>
+            </div> -->
+            <div style="font-size: 13px; right: 11px;" id="checkbox">
+            <div class="form-check form-switch" >
+              <input  id="추천" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="cnn" >
+              <label class="form-check-label" for="추천">추천</label>
+            </div>
+            <div class="form-check form-switch">
+              <input  id="특가" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="ann">
+              <label class="form-check-label" for="특가">특가</label>
+            </div>
+            <div class="form-check form-switch">
+              <input  id="가격" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="vnn">
+              <label class="form-check-label" for="가격">가격</label>
+            </div>
+            <div class="form-check form-switch">
+              <input  id="광고" class="form-check-input" v-model="checkradio" type="checkbox" role="switch" value="광고">
+              <label class="form-check-label" for="광고">광고</label>
+            </div>
+          </div>
+          </div>
+        </div>
+      <button class="btn btn-default btn-xs" id="오엑스">6O</button>
+      <!-- <script src="../dist/main.js"></script> -->
+      <!-- <script src="../dist/bundle.js"></script> -->
+
+      <script src="./bundle.js">
+    </script>
+    </div>
+  </div>
+</body>
+
+</html>

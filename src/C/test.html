@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <div>
+             <aiplus :highlightData="highlightData" :message="message" :deallist="deallist" :deallist2="deallist2">
+             </aiplus>
+        </div>
+
+        <div id="총디브" v-on="idcate"></div>
+
+        <!-- @ -->
+
+
+          <div id="부스팅점수" v-for="(v,i) in boostCategories" :key="i">
+                {{setalljson(v.categoryCd)+" "}}
+                <span style="color:red">{{v.score}}</span>
+        </div>
+        <div id="카테통계특가">
+                <div id="부스팅점수" v-for="(v,i) in boostCategories1" :key="i">{{setalljson(v.categoryCd)+" "}}
+                        <span style="color:blue">{{v.score}}</span>
+                </div>
+
+                <!-- @ -->
+
+                <div id="카테통계특가">
+
+                        <div id="카테상세">
+                                <div v-for="(v,i) in getWordCnt(cate통계)" :key="i">{{i+" >  "+v}}</div>
+                        </div>
+                        <div id="카테코드">
+                                <div v-for="(v,i) in getWordCnt(cate통계코드)" :key="i">
+                                        <span @click="Commandid(parseInt(i.slice(0,8)))">{{i.slice(0,8)}}</span>
+                                        <span @click="InputCateCd=i.slice(10,17);radio='카테고리추출'">{{i.slice(10,33)+" >  "+v}}</span>
+                                </div>
+                        </div>
+                </div>
+                <div>
+                        <div>
+                                <div v-for="(v,i) in excludedCategoryIds" :key="i" style="color:red">{{setalljson(v)}}
+                                </div>
+                        </div>
+
+                        <div id="상품수">
+                                <span @click="Commandtext(message)">{{message}}</span>{{":"+info1.length}}
+                                <span style="color:red" v-if="message!==대표키워드" @click="Commandtext(대표키워드)">{{대표키워드}}</span>
+
+                        </div>
+                        <hr>
+
+
+                        <div>
+                                <input type="range" v-model="localkwdlength" min='2' max='100' style="left:0%">{{localkwdlength}}
+                                <input id="검색어" type="text" :placeholder="message" v-model="keyword" style="left:0%">
+
+                                <input type="radio" name="love1" v-model="radio" value="dispNm">딜명포함
+                                <input type="radio" name="love2" v-model="radio" value="seller">셀러
+                                <input type="radio" name="love6" id="디폴트" v-model="radio" value="디폴트">디폴트
+                                <input type="radio" name="love3" v-model="radio" value="unclu" id="미포함">미포함
+                                <button id="keylength1" @click="keywordlength++">+</button>
+                                <button id="keylength2" @click="keywordlength--">-</button>
+                                <input type="range" v-model="keywordlength" style="left:0%">{{keywordlength}}
+                                <input type="radio" name="love4" v-model="radio" value="twoword">2글자 {{kw1}} {{kw2}}
+                                <input type="radio" id="블랙리스트" name="love5" v-model="radio" value="ck1">{{checklisttext1}}
+                                <input type="radio" id="블랙리스트2" name="love7" v-model="radio" value="ck2">{{checklisttext2}}
+
+                                <button @click="idididcatalog" id='ggid'>아이디추출</button>
+                                <button id="show-modal" @click="showModal = true">{{"all:"+dealscount}}</button>
+
+                                <input id="카테고리명" type="text" placeholder="" v-model="InputCateCd" style="left:0%">
+                                <input id="카테고리추출" type="radio" name="love8" v-model="radio" value="카테고리추출">카테
+                                <input id="EP1" type="radio" name="love11" v-model="radio" value="EP1">
+                                <label for="EP1">EP1</label>
+
+                                <span v-for="(vtoken,i) in token[0]" :key="i"> / {{vtoken.token}}</span>
+                                <button id="pricebutton" @click="upprice">
+                                        <span v-if="uppriceif">가격↓</span>
+                                        <span v-else>가격↑</span>
+                                </button>
+                                <button @click="hidecatalog">
+                                        <span v-if="catalogif">카탈숨기</span>
+                                        <span v-else>카탈만보기</span>
+                                </button>
+                                <button id="카탈만보기" @click="catalonly">
+                                        <span v-if="catalogonlyif">카탈만보기</span>
+                                        <span v-else>원본보기</span>
+                                </button>
+
+                                <modal :modalstorename="dealliststorename" :modalhtml="deallisthtml" :modalimg="deallistimg" v-if="showModal" @close="showModal = false">
+                                </modal>
+
+                                <button @click="idcate2">⑥</button>
+                                <button @click="idcate3">③</button>
+                                <button @click="alldeal" id="딜리스트">✔</button>
+                                <input id="localkwdlength" type="text" :placeholder="10" v-model="localkwdlength" style="left:0%;width:32px">
+                                <button id="localsave" @click="localStoragesave">🎨</button>
+                                <button id="test" @click="test">test</button>
+                                <button id="idcate_filter" @click="idcate_filter">all카테</button>
+                                <button id="cms" @click="get_cms_cookie">cms로그인</button>
+                                <input id="page_count" type="text" :placeholder="0" v-model="page_count" style="left:0%;width:32px">
+                                <button id="cms" @click="reload">{{timer}}</button>
+
+                                <div v-if='check_cms_div'>
+                                        <input type="text" name="name" v-model='cms_id'>cms ID
+                                        <input type="text" name="pass" v-model='cms_password'> password
+                                        <button @click='cms_login'>로그인</button>
+                                </div>
+
+
+                        </div>
+
+                        <div>
+                                <div class="dropdown">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                검색
+                                        </a>
+
+                                        <ul class="dropdown-menu">
+                                                <li>
+                                                        <a class="dropdown-item" :href="'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query='+encodeURIComponent(message)" target="_blank">네이버</a>
+                                                </li>
+                                                <li>
+                                                        <a class="dropdown-item" :href="'https://search.shopping.naver.com/search/all?frm=NVSHATC&origQuery='+encodeURIComponent(message)+'&pagingIndex=1&pagingSize=60&productSet=total&query='+encodeURIComponent(message)+'&sort=rel&timestamp=&viewType=list'" target="_blank">네이버 쇼핑</a>
+                                                </li>
+                                                <li>
+                                                        <a class="dropdown-item" :href="'https://search.wemakeprice.com/search?search_cate=top&keyword='+encodeURIComponent(message)+'&isRec=1&_service=5&_type=3&perPage=90&page=1'" target="_blank">위메프 검색</a>
+                                                </li>
+                                                <li>
+                                                        <a class="dropdown-item" :href="'https://search-api-tester.wonders.work/ad?'+encodeURIComponent(message)" target="_blank">광고 검색</a>
+                                                </li>
+                                                <li>
+                                                        <button class="dropdown-item" @click="all_kill">올킬</button>
+                                                </li>
+                                        </ul>
+                                </div>
+
+                                <span style="color:blue">제외된 ID{{제외아이디수}}개</span>
+                                <strong v-if="force || errata">네이버 오타<span style="color:red"> {{force}}{{errata}}</span>로 검색 </strong>
+                        </div>
+
+                        <div id="dealtype" :class="dealtype(v.link.type) + ' ' + v.salePriceSuffix + ' ' + v.link.value" v-for="(v,i) in info1" :key="v.link.value">
+
+                                <span class="index" @click="out_info1(v)">{{dealindex[i]}}##{{v.administrator.product.brandKeyword}}</span>
+                                <span id="브랜드" @click="handrank(v)" v-html="highlightData(v.administrator.product.brandKeyword)"></span>
+                                <a :href="checkimgsrc(v)" target="_blank">
+                                        <img class="card-img-top" :src=cimg(v) alt="Card image cap" :style="'opacity:'+v.link.check">
+                                </a>
+
+
+                                <div id="lastdeal" v-if="i==info1.length-1"></div>
+                                <div id="정보">
+                                        <div id="기본정보">
+
+                                                <select name="comment" style="font-size:12px;" class="combo-bx" v-model='CmsoptionValue'>
+                                                        <option value="카테고리오맵핑">카오</option>
+                                                        <option value="서치태그과등록">내과</option>
+                                                        <option value="브랜드과등록">브랜드과등록</option>
+                                                        <option value="딜네임과등록">딜과</option>
+                                                        <option value="검색어포함">검포</option>
+                                                        <option value="딜과브">딜과브</option>
+                                                        <option value="검색조합이슈">검색조합이슈</option>
+                                                </select>
+                                                <!--  <span v-if="v.administrator.product.catalogNo">
+                            <button style="font-size:10px;color:red;"
+                            @click='postmanctlg(v)'>제외</button>
+                        </span>-->
+                                                <span>
+                                                        <button style="font-size:10px;" @click='postman(v.link.value,v.dispNm)'>제외</button>
+                                                </span>
+                                                <span id="딜번호" @click="Commandid(v.link.value)">{{v.link.value}}</span>
+                                                <span id="딜타입">{{check_deal_type(v)}}</span>
+                                                <!--<span id="카탈로그번호" v-if="v.administrator.product.catalogNo"
+                                @click="Commandid(v.administrator.product.catalogNo)">{{" "+v.administrator.product.catalogNo}}</span>-->
+                                                <div>
+                                                        <div id="딜이름가격" @click="Commandtext(CmsoptionValue_command+'\t'+v.link.value+'\t'+v.dispNm)" @dblclick="Commandid(v.link.value+'\t'+v.dispNm),Commandcnn(v.link.value,v.dispNm)" v-html="highlightData(v.dispNm)+' : '+v.salePrice+' 원'"></div>
+
+                                                </div>
+                                                <button class='btn btn-default btn-xs' v-if="v.link.type=='DEAL' || v.link.type=='DEAL cms'" @click='deallist(v)'>💙</button>
+                                                <button class='btn btn-default btn-xs' v-else @click='deallist2(v)'>🤍</button>
+                                                <div id="상세정보">
+
+                                                        <div id="카테고리" v-if="v.administrator.product.physicsCategoryIds">
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.lcateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.lcateCd)">{{v.administrator.product.physicsCategoryIds.lcateNm}}</span>
+                                                                >
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.mcateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.mcateCd)">{{v.administrator.product.physicsCategoryIds.mcateNm}}</span>
+                                                                >
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.scateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.scateCd)">{{v.administrator.product.physicsCategoryIds.scateNm}}</span>
+                                                                >
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.dcateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.dcateCd)">{{v.administrator.product.physicsCategoryIds.dcateNm}}</span>
+                                                                <span style="color:rgb(90, 36, 36);font-size:15px" v-html="highlightData(v.administrator.product.catalogCategoryKeyword)"></span>
+                                                        </div>
+
+
+                                                        <div v-if="!(v.link.type=='PROD' || v.link.type=='DEAL')" id="내부키워드" v-html="highlightData(v.administrator.product.innerKeyword)"></div>
+                                                        <div v-if="!(v.link.type=='PROD' || v.link.type=='DEAL')" id="딜내부키워드" v-html="highlightData(v.administrator.product.dealInnerKeyword)"></div>
+                                                        <div id="파트너정보" @dblclick='Commandtext("seller:"+v.administrator.product.partnerId+"&"+message)'>
+                                                                {{v.administrator.product.partnerName}}{{" seller:"+v.administrator.product.partnerId}}
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+
+                <!-- @@@@@@@@@@@@@@@ -->
+
+                <div id="삼팔선1" v-if="info2.length>0">-------------------------------
+
+                </div>
+
+                <!-- @@@@@@@@@@@@@@@ -->
+                <div id="checkarea">
+                        <div id="dealtype" :class="dealtype(v.link.type) + ' ' + v.salePriceSuffix + ' ' + v.link.value" v-for="(v,i) in info2" :key="v.link.value">
+
+                                <span class="index" @click="out_info2(v)">{{dealindex[i]}}##{{v.administrator.product.brandKeyword}}</span>
+                                <span id="브랜드" @click="handrank(v)" v-html="highlightData(v.administrator.product.brandKeyword)"></span>
+                                <a :href="checkimgsrc(v)" target="_blank">
+                                        <img class="card-img-top" :src=cimg(v) alt="Card image cap" :style="'opacity:'+v.link.check">
+                                </a>
+
+
+                                <div id="lastdeal" v-if="i==info2.length-1"></div>
+                                <div id="정보">
+                                        <div id="기본정보">
+
+                                                <select name="comment" style="font-size:12px;" class="combo-bx" v-model='CmsoptionValue'>
+                                                        <option value="카테고리오맵핑">카오</option>
+                                                        <option value="브랜드과등록">딜과브</option>
+                                                        <option value="브랜드과등록">브랜드과등록</option>
+                                                        <option value="딜네임과등록">딜과</option>
+                                                        <option value="검색어포함">검포</option>
+                                                        <option value="직접입력">직접입력</option>
+                                                </select>
+                                                <!--  <span v-if="v.administrator.product.catalogNo">
+                            <button style="font-size:10px;color:red;"
+                            @click='postmanctlg(v)'>제외</button>
+                        </span>-->
+                                                <span>
+                                                        <button style="font-size:10px;" @click='postman(v.link.value,v.dispNm)'>제외</button>
+                                                </span>
+                                                <span id="딜번호" @click="Commandid(v.link.value)">{{v.link.value}}</span>
+                                                <span id="딜타입">{{check_deal_type(v)}}</span>
+                                                <!--<span id="카탈로그번호" v-if="v.administrator.product.catalogNo"
+                            @click="Commandid(v.administrator.product.catalogNo)">{{" "+v.administrator.product.catalogNo}}</span>-->
+                                                <div>
+                                                        <div id="딜이름가격" @click="Commandtext(CmsoptionValue_command+'\t'+v.link.value+'\t'+v.dispNm)" @dblclick="Commandid(v.link.value+'\t'+v.dispNm),Commandcnn(v.link.value,v.dispNm)" v-html="highlightData(v.dispNm)+' : '+v.salePrice+' 원'"></div>
+
+                                                </div>
+                                                <button class='btn btn-default btn-xs' v-if="v.link.type=='DEAL' || v.link.type=='DEAL cms'" @click='deallist(v)'>💙</button>
+                                                <button class='btn btn-default btn-xs' v-else @click='deallist2(v)'>🤍</button>
+                                                <div id="상세정보">
+
+                                                        <div id="카테고리" v-if="v.administrator.product.physicsCategoryIds">
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.lcateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.lcateCd)">{{v.administrator.product.physicsCategoryIds.lcateNm}}</span>
+                                                                >
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.mcateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.mcateCd)">{{v.administrator.product.physicsCategoryIds.mcateNm}}</span>
+                                                                >
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.scateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.scateCd)">{{v.administrator.product.physicsCategoryIds.scateNm}}</span>
+                                                                >
+                                                                <span @dblclick="Commandtext(v.administrator.product.physicsCategoryIds.dcateCd)" @click="Command(event.target),check_cate(v.administrator.product.physicsCategoryIds.dcateCd)">{{v.administrator.product.physicsCategoryIds.dcateNm}}</span>
+                                                                <span style="color:rgb(90, 36, 36);font-size:15px" v-html="highlightData(v.administrator.product.catalogCategoryKeyword)"></span>
+                                                        </div>
+
+                                                        <div v-if="!(v.link.type=='PROD' || v.link.type=='DEAL')" id="내부키워드" v-html="highlightData(v.administrator.product.innerKeyword)"></div>
+                                                        <div v-if="!(v.link.type=='PROD' || v.link.type=='DEAL')" id="딜내부키워드" v-html="highlightData(v.administrator.product.dealInnerKeyword)"></div>
+                                                        <div id="파트너정보" @dblclick='Commandtext("seller:"+v.administrator.product.partnerId+"&"+message)'>
+                                                                {{v.administrator.product.partnerName}}{{" seller:"+v.administrator.product.partnerId}}
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div id="lastdeal" v-if="i==info2.length-1"></div>
+
+                                </div>
+                        </div>
+                </div>
+            </div>
+     </body>
+
+</html>
